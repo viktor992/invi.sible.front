@@ -1,11 +1,14 @@
 <template>
   <div id="app">
-    <h1>invi.sible.front</h1>
+    <!-- <h1>invi.sible.front</h1>
     <p>Consultando datos de
       <a href="https://invi.sible.link">https://invi.sible.link</a>
-    </p>
-    <radar-chart :graphId="'g1'" :serverData="surfaceData" :legendOptions="legendOptions"  :width=800 :height=800 :size=800 :initialZoom=0.75 ></radar-chart>
+    </p> -->
+    <!-- <radar-chart :graphId="'g1'" :serverData="surfaceData" :legendOptions="legendOptions"  :width=800 :height=800 :size=800 :initialZoom=0.75 ></radar-chart>
     <sunburst-chart :graphId="'g2'" :serverData="extendedData" :layers="['siteCountry', 'company','href']" :centerLabel="'Sites'" :height=800 :width=800 :initialScale=0.17 :radius=3000></sunburst-chart>
+     -->
+
+    <router-view></router-view>
 
   </div>
 </template>
@@ -154,9 +157,9 @@ export default {
     let campaigns = _.map(this.countries, x => { return x.campaign });
 
     _.forEach(campaigns, (campaign) => {
-      this.getSurfaceData(campaign);
-      this.getDetailsData(campaign);
-      this.getExtendedData(campaign);
+      // this.getSurfaceData(campaign);
+      // this.getDetailsData(campaign);
+      // this.getExtendedData(campaign);
     })
 
   }
@@ -170,7 +173,7 @@ export default {
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
-    margin-top: 60px;
+    /* margin-top: 60px; */
   }
 
   h1,
