@@ -4,7 +4,9 @@
     <p>Consultando datos de
       <a href="https://invi.sible.link">https://invi.sible.link</a>
     </p>
-    <radar-chart :serverData="serverData" :legendOptions="legendOptions"></radar-chart>
+    <radar-chart :graphId="'g1'" :serverData="surfaceData" :legendOptions="legendOptions"  :width=800 :height=800 :size=800 :initialZoom=0.75 ></radar-chart>
+    <sunburst-chart :graphId="'g2'" :serverData="extendedData" :layers="['siteCountry', 'company','href']" :centerLabel="'Sites'" :height=800 :width=800 :initialScale=0.17 :radius=3000></sunburst-chart>
+
   </div>
 </template>
 
@@ -17,13 +19,16 @@ export default {
     return {
       legendOptions: [],
       countries: [
-        { short: 'py', name: 'paraguay', campaign: 'gob.paraguay' },
-        { short: 'br', name: 'brasil', campaign: 'gob.brasil' },
-        // {short:'co', name:'colombia',campaign:'gob.colombia'},
-        { short: 'cl', name: 'chile', campaign: 'gob.chile' }
+        { short: 'py', name: 'Paraguay', campaign: 'gob.paraguay' },
+        { short: 'br', name: 'Brasil', campaign: 'gob.brasil' },
+        {short:'co', name:'Colombia',campaign:'gob.colombia'},
+        { short: 'cl', name: 'Chile', campaign: 'gob.chile' }
       ],
       serverData: [],
-      companies: {}
+      surfaceData: [],
+      detailsData: [],
+      extendedData: [],
+      companies: {},
     }
   },
   methods: {
@@ -48,11 +53,9 @@ export default {
       this.$http.get(`https://invi.sible.link/api/v1/surface/${campaign}`)
         .then(response => { return response.json() })
         .then(data => {
-          console.log("Original data", data)
-          console.log("processLeaders:", this.processLeaders(data, country))
 
           this.legendOptions.push(country.name)
-          this.serverData.push(this.processLeaders(data, country));
+          this.surfaceData.push(this.processLeaders(data));
 
         })
     },
@@ -62,10 +65,10 @@ export default {
       this.$http.get(`https://invi.sible.link/api/v1/details/${campaign}`)
         .then(response => { return response.json() })
         .then(data => {
-          console.log("Original data", data)
+          console.log("Original Details data", data)
 
           //Se guarda en variable serverData para algún uso futuro
-          this.serverData.push(this.processInclusions(data, country));
+          this.detailsData.push(this.processInclusions(data, country));
 
 
         })
@@ -76,12 +79,10 @@ export default {
       this.$http.get(`https://invi.sible.link/api/v1/extended/${campaign}`)
         .then(response => { return response.json() })
         .then(data => {
-          console.log("Original data", data)
+          console.log("Original Extended data", data)
 
           //Se guarda en variable serverData para algún uso futuro
-          this.serverData.push(this.processContentTypeExtended(data, country));
-
-
+          this.extendedData.push(this.processSiteExtended(data, country));
         })
     },
 
@@ -102,7 +103,8 @@ export default {
         .map(x => { return { href: x.href, inclusion: x.inclusion, country: country.name } })
         .value();
     },
-    processLeaders(data, country) {
+
+    processLeaders(data) {
       return _.chain(data)
         .map(x => { return x.leaders })
         .flatten()
@@ -128,6 +130,7 @@ export default {
         .map(x => { x.siteCountry = country.name; return x })
         .value();
     },
+
     processExtended(data, country) {
       return _.chain(data)
         .countBy(x => x.inclusion)
@@ -152,6 +155,8 @@ export default {
 
     _.forEach(campaigns, (campaign) => {
       this.getSurfaceData(campaign);
+      this.getDetailsData(campaign);
+      this.getExtendedData(campaign);
     })
 
   }

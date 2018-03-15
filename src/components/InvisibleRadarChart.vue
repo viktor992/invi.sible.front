@@ -1,5 +1,5 @@
 <template>
-  <div id="invisibleRadarChart">
+  <div v-bind:id="graphId" v-bind:style="'width:'+(width)+'px'">
   </div>
 </template>
 
@@ -9,7 +9,7 @@ import * as d3 from 'd3';
 import RadarChart from './utils/RadarChart.js';
 
 export default {
-  props: ['serverData', 'legendOptions'],
+  props: ['serverData', 'legendOptions', 'graphId', 'height', 'width', 'shownAxes','size','initialZoom','initialPosX'],
   data: function() {
     return {
       localData: [],
@@ -28,13 +28,20 @@ export default {
 
       this.companies = new Set();
 
-      _.forEach(this.localData, (x) => {
-        _.forEach(x, (y, i) => {
-          if (y.value != 0) {
-            this.companies.add(y.axis);
-          }
+      if(this.shownAxes == undefined){
+        _.forEach(this.localData, (x) => {
+          _.forEach(x, (y, i) => {
+            if (y.value != 0) {
+              this.companies.add(y.axis);
+            }
+          })
         })
-      })
+      } else {
+        _.forEach(this.shownAxes, (x) => {
+          this.companies.add(x);
+        })
+      }
+
 
       this.companies.forEach((value) => {
         _.forEach(this.localData, (x) => {
@@ -58,8 +65,10 @@ export default {
       })
       this.localData = newLocal;
 
-      var w = 500,
-        h = 500;
+      var w = this.width,
+        h = this.height,
+        legendW = 275,
+        legendH = this.height;
 
       var colorscale = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -72,34 +81,42 @@ export default {
 
       //Options for the Radar chart, other than default
       var mycfg = {
-        w: w,
-        h: h,
+        w: this.size == undefined ? 500 : this.size,
+        h: this.size == undefined ? 500 : this.size,
+        initialZoom: this.initialZoom == undefined ? 1 : this.initialZoom,
         maxValue: 1,
-        levels: 10,
-        ExtraWidthX: 300
+        levels: 4,
+        ExtraWidthX: 0,
+        factor: 1,
+        containerW:w,
+        containerH:h,
       }
 
-      //Call function to draw the Radar chart
-      //Will expect that data is in %'s
-      RadarChart.draw("#invisibleRadarChart", d, mycfg);
 
       ////////////////////////////////////////////
       /////////// Initiate legend ////////////////
       ////////////////////////////////////////////
 
-      var svg = d3.select('#invisibleRadarChart')
-        .selectAll('svg')
+      d3.select(`#radarChartlegend`).remove();
+
+      var svg = d3.select(`#${this.graphId}`)
         .append('svg')
-        .attr("width", w + 300)
-        .attr("height", h)
+        .attr("id", "radarChartlegend")
+        .attr("width", legendW )
+        .attr("height", legendH )
+        // .attr("style", "position:absolute;z-index:2;background-color:#FFF" )
+        .attr("style", "position:absolute;z-index:2" )
+        .attr("height", 20 * (this.legendOptions.length+1))
 
       //Create the title for the legend
       var text = svg.append("text")
         .attr("class", "title")
         .attr('transform', 'translate(90,0)')
-        .attr("x", w - 70)
+        // .attr("x", w - 70)
+        .attr("x", -70)
         .attr("y", 10)
         .attr("font-size", "12px")
+        .attr("font-family", "'Avenir', Helvetica, Arial, sans-serif")        
         .attr("fill", "#404040")
         .text("Percentage of company inclusions per country");
 
@@ -115,7 +132,7 @@ export default {
         .data(this.legendStatus)
         .enter()
         .append("rect")
-        .attr("x", w - 65)
+        .attr("x", 0 - 65)
         .attr("y", function(d, i) { return i * 20; })
         .attr("width", 10)
         .attr("height", 10)
@@ -127,9 +144,11 @@ export default {
         .data(this.legendStatus)
         .enter()
         .append("text")
-        .attr("x", w - 52)
+        // .attr("x", w - 52)
+        .attr("x", 0 )
         .attr("y", function(d, i) { return i * 20 + 9; })
         .attr("font-size", "11px")
+        .attr("font-family", "'Avenir', Helvetica, Arial, sans-serif")        
         .attr("fill", (x) => { if (x.active) { return "#000" } else { return "#737373"; } })
         .attr("style", "cursor:pointer;text-transform: capitalize;")
         .on("click", (x, i) => {
@@ -143,6 +162,10 @@ export default {
           self.draw()
         })
         .text(function(d) { return d.text; });
+
+              //Call function to draw the Radar chart
+      //Will expect that data is in %'s
+      RadarChart.draw(`#${this.graphId}`, d, mycfg);
     }
   }
 }
