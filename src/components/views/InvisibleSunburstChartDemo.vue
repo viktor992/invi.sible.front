@@ -1,6 +1,6 @@
 <template>
   <div>
-      <sunburst-chart :graphId="'g2'" :serverData="extendedData" :layers="layers" :centerLabel="centerLabel" :height="height" :width="width" :initialScale="initialScale" :radius="radius"></sunburst-chart>
+      <sunburst-chart :graphId="'g2'" :serverData="extendedData" :layers="layers" :centerLabel="centerLabel" :height="height" :width="width" :initialScale="initialScale" :radius="radius" :computeSize="computeSize"></sunburst-chart>
   </div>
 </template>
 <script>
@@ -21,6 +21,7 @@ export default {
         shownItems: this.$route.query.shownItems,
         layers: this.$route.query.layers == undefined? ['siteCountry', 'company','href']: this.$route.query.layers,
         centerLabel: this.$route.query.centerLabel == undefined? "Sites" : this.$route.query.centerLabel,        
+        computeSize: this.$route.query.computeSize === 'true'? true: false,
       }
   },
   methods:{

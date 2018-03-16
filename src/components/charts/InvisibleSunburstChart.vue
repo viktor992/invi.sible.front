@@ -5,7 +5,7 @@
 <script>
 import * as d3 from 'd3';
 export default {
-    props: ["graphId","serverData", "height", "width", "centerLabel", "layers", "initialScale", "radius"],
+    props: ["graphId","serverData", "height", "width", "centerLabel", "layers", "initialScale", "radius", "computeSize"],
     data() {
         return {
             chartData:[]
@@ -76,6 +76,8 @@ export default {
 
             if (obj.children != undefined) {
                 obj.children.push(tempList[1]);
+            } else {
+                obj.size++;
             }
 
         },
@@ -127,8 +129,13 @@ export default {
                     return Math.max(0, y(d.y0 + (d.y1 - d.y0)));
                 });
 
+            var computeSize = this.computeSize;
+
             var root = d3.hierarchy(this.chartData)
                 .sum(function(d) {
+                    if(computeSize){
+                        return d.children ? 0 : d.size;
+                    }
                     return d.children ? 0 : 1;
                 })
 
