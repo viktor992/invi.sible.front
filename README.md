@@ -64,4 +64,4 @@ Consulte el archivo *src/config.js.example* para ver una configuración de ejemp
 
 ## Demo de gráficos embebidos
 
-Para ver una demostración sobre cómo embeber los gráficos implementados en otras páginas, descargar el archivo *iframes.html* y abrirlo en el navegador.
+Para ver una demostración sobre cómo embeber los gráficos implementados en otras páginas, hacer deploy de la aplicación y abrir el archivo *iframes.html* en el navegador.
