@@ -8,12 +8,14 @@ import {config} from './config'
 import {routes} from './routes'
 import InvisibleRadarChart from './components/charts/InvisibleRadarChart.vue'
 import InvisibleSunburstChart from './components/charts/InvisibleSunburstChart.vue'
+import Spinner from 'vue-simple-spinner'
 
 Vue.use(VueRouter);
 Vue.use(VueResource);
 
 Vue.http.options.root = config.serverURL;
 
+Vue.component('vue-simple-spinner', Spinner)
 Vue.component('radar-chart', InvisibleRadarChart)
 Vue.component('sunburst-chart', InvisibleSunburstChart)
 

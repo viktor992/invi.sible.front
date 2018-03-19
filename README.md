@@ -44,6 +44,7 @@ Consulte el archivo *src/config.js.example* para ver una configuración de ejemp
         initialZoom: float que determina la zoom con el que se verá el gráfico inicialmente.
         shownAxes: array que determina qué companies se utilizarán como ejes del gráfico (ej: Google). Por defecto se muestran todas las companies.
         shownItems: array que determina los datos de qué campaigns se mostrarán (especificado a partir del name, ej: Paraguay)
+        legendText: texto a mostrar como título de la leyenda.
 
 >Este gráfico muestra los datos del servicio *api/v1/surface/*.
 

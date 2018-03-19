@@ -1,6 +1,6 @@
 <template>
     <div>
-        <radar-chart :graphId="'g1'" :serverData="surfaceData" :legendOptions="legendOptions"  :width="width" :height="height" :size="size" :initialZoom="initialZoom" :shownAxes="shownAxes" ></radar-chart>
+        <radar-chart :graphId="'g1'" :serverData="surfaceData" :legendOptions="legendOptions"  :width="width" :height="height" :size="size" :initialZoom="initialZoom" :shownAxes="shownAxes" :legendText="legendText" ></radar-chart>
     </div>
 </template>
 <script>
@@ -17,6 +17,7 @@ export default {
         initialZoom: this.$route.query.initialZoom === undefined? 0.75: parseFloat(this.$route.query.initialZoom),
         shownAxes: this.$route.query.shownAxes,
         shownItems: this.$route.query.shownItems,
+        legendText: this.$route.query.legendText,
 
       }
   },

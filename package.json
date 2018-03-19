@@ -14,7 +14,8 @@
     "lodash": "^4.17.5",
     "vue": "^2.5.11",
     "vue-resource": "^1.4.0",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vue-simple-spinner": "^1.2.8"
   },
   "browserslist": [
     "> 1%",

@@ -1,5 +1,6 @@
 <template>
   <div v-bind:id="graphId" v-bind:style="'width:'+(width)+'px'">
+    <vue-simple-spinner v-bind:style="'height:'+(height)+'px; padding-top:'+(height/2)+'px;'" v-if="isDrawing"></vue-simple-spinner>
   </div>
 </template>
 
@@ -9,12 +10,13 @@ import * as d3 from 'd3';
 import RadarChart from './utils/RadarChart.js';
 
 export default {
-  props: ['serverData', 'legendOptions', 'graphId', 'height', 'width', 'shownAxes','size','initialZoom','initialPosX'],
+  props: ['serverData', 'legendOptions', 'graphId', 'height', 'width', 'shownAxes','size','initialZoom','initialPosX','legendText'],
   data: function() {
     return {
       localData: [],
       legendStatus: [],
-      companies: {}
+      companies: {},
+      isDrawing: true
     }
   },
   watch: {
@@ -25,6 +27,8 @@ export default {
   },
   methods: {
     draw() {
+
+      this.isDrawing = true;
 
       this.companies = new Set();
 
@@ -118,7 +122,7 @@ export default {
         .attr("font-size", "12px")
         .attr("font-family", "'Avenir', Helvetica, Arial, sans-serif")        
         .attr("fill", "#404040")
-        .text("Percentage of company inclusions per country");
+        .text(this.legendText == undefined? "Percentage of company inclusions per country": this.legendText);
 
       //Initiate Legend	
       var legend = svg.append("g")
@@ -152,6 +156,19 @@ export default {
         .attr("fill", (x) => { if (x.active) { return "#000" } else { return "#737373"; } })
         .attr("style", "cursor:pointer;text-transform: capitalize;")
         .on("click", (x, i) => {
+
+          let activeCount = 0;
+
+          _.forEach(self.legendStatus, (x) => {
+            if(x.active){
+              activeCount++;
+            }
+          })
+
+          if(activeCount <= 1 && self.legendStatus[i].active){
+            return;
+          }
+
           if (self.legendStatus[i].active) {
             self.localData[i] = _.map(self.localData[i], (x) => { return { axis: x.axis, value: 0 }; });
             self.legendStatus[i].active = false;
@@ -166,6 +183,7 @@ export default {
               //Call function to draw the Radar chart
       //Will expect that data is in %'s
       RadarChart.draw(`#${this.graphId}`, d, mycfg);
+      this.isDrawing = false;
     }
   }
 }

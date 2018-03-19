@@ -1,5 +1,6 @@
 <template>
     <div v-bind:id="graphId">
+        <vue-simple-spinner v-bind:style="'height:'+(height)+'px; padding-top:'+(height/2)+'px;'" v-if="isDrawing"></vue-simple-spinner>
     </div>
 </template>
 <script>
@@ -8,7 +9,8 @@ export default {
     props: ["graphId","serverData", "height", "width", "centerLabel", "layers", "initialScale", "radius", "computeSize"],
     data() {
         return {
-            chartData:[]
+            chartData:[],
+            isDrawing: true
         };
     },
     methods: {
@@ -82,6 +84,8 @@ export default {
 
         },
         draw() {
+
+            this.isDrawing = true;
 
             let graphId = this.graphId;
 
@@ -265,6 +269,8 @@ export default {
             let scale = this.initialScale == undefined? 1 : this.initialScale;
 
             d3.select(`#${graphId}`).select('svg').call(zoom).call(zoom.transform, d3.zoomIdentity.translate(width / 2 , (height / 2 + 10) ).scale(scale,scale));
+
+            this.isDrawing = false;
 
         }
     },
