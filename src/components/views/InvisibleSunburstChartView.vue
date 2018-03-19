@@ -4,16 +4,12 @@
   </div>
 </template>
 <script>
+import {config} from '../../config.js'
 export default {
   data(){
       return {
         extendedData: [],
-        countries: [
-            { short: 'py', name: 'Paraguay', campaign: 'gob.paraguay' },
-            { short: 'br', name: 'Brasil', campaign: 'gob.brasil' },
-            {short:'co', name:'Colombia',campaign:'gob.colombia'},
-            { short: 'cl', name: 'Chile', campaign: 'gob.chile' }
-        ],
+        countries: config.countries,
         width: this.$route.query.width === undefined? 800: Number(this.$route.query.width),
         height: this.$route.query.height === undefined? 800: Number(this.$route.query.height),
         radius: this.$route.query.radius === undefined? 3000: Number(this.$route.query.radius),
@@ -27,11 +23,9 @@ export default {
   methods:{
     getExtendedData(campaign) {
       let country = _.find(this.countries, x => { return x.campaign == campaign });
-      this.$http.get(`https://invi.sible.link/api/v1/extended/${campaign}`)
+      this.$http.get(`api/v1/extended/${campaign}`)
         .then(response => { return response.json() })
         .then(data => {
-          console.log("Original Extended data", data)
-
           this.extendedData.push(this.processSiteExtended(data, country));
         })
     },

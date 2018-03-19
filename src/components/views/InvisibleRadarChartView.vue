@@ -4,16 +4,12 @@
     </div>
 </template>
 <script>
+import {config} from '../../config.js'
 export default {
   data(){
       return {
         legendOptions: [],
-        countries: [
-            { short: 'py', name: 'Paraguay', campaign: 'gob.paraguay' },
-            { short: 'br', name: 'Brasil', campaign: 'gob.brasil' },
-            {short:'co', name:'Colombia',campaign:'gob.colombia'},
-            { short: 'cl', name: 'Chile', campaign: 'gob.chile' }
-        ],
+        countries: config.countries,
         surfaceData: [],
         width: this.$route.query.width === undefined? 800: Number(this.$route.query.width),
         height: this.$route.query.height === undefined? 800: Number(this.$route.query.height),
@@ -26,9 +22,8 @@ export default {
   },
   methods: {
     getSurfaceData(campaign) {
-        console.log("this",this)
       let country = _.find(this.countries, x => { return x.campaign == campaign });
-      this.$http.get(`https://invi.sible.link/api/v1/surface/${campaign}`)
+      this.$http.get(`api/v1/surface/${campaign}`)
         .then(response => { return response.json() })
         .then(data => {
 

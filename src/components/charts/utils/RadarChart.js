@@ -136,7 +136,6 @@ var RadarChart = {
       dataValues = [];
       g.selectAll(".nodes")
         .data(y, function (j, i) {
-          console.log("j.value",j.value,cfg.maxValue,(parseFloat(Math.max(j.value, 0)) / cfg.maxValue), 1-(parseFloat(Math.max(j.value, 0)) / cfg.maxValue));
           dataValues.push([
             cfg.w / 2 * (1 - (parseFloat(Math.max(j.value, 0)) / cfg.maxValue) * cfg.factor * Math.sin(i * cfg.radians / total)),
             cfg.h / 2 * (1 - (parseFloat(Math.max(j.value, 0)) / cfg.maxValue) * cfg.factor * Math.cos(i * cfg.radians / total))
