@@ -1,0 +1,9 @@
+export const config = {
+    serverURL: 'https://invi.sible.link',
+    countries: [
+        { name: 'Paraguay', campaign: 'gob.paraguay' },
+        { name: 'Brasil', campaign: 'gob.brasil' },
+        { name: 'Colombia', campaign: 'gob.colombia' },
+        { name: 'Chile', campaign: 'gob.chile' }
+    ]
+}
